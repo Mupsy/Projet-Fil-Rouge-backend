@@ -1,0 +1,72 @@
+.env
+
+# =========================
+# Java / Maven
+# =========================
+target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Maven wrapper logs
+.mvn/
+mvnw
+mvnw.cmd
+
+# =========================
+# Spring Boot
+# =========================
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# logs
+*.log
+logs/
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+*.env
+*.env.*
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iml
+out/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Eclipse / STS
+# =========================
+.project
+.classpath
+.settings/
+.springBeans
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Docker (optionnel)
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Security / Keys (IMPORTANT)
+# =========================
+*.pem
+*.key
+id_rsa*
+id_ed25519*
