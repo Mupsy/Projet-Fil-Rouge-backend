@@ -21,21 +21,21 @@ jobs:
 
       - name: Deploy on VPS
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
-            cd ~/drone-backend
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd $HOME/drone-backend
 
-            git pull origin main
+          git pull origin main
 
-            cat > .env << ENVEOF
-            SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}
-            SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }}
-            SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            JWT_EXPIRATION=86400000
-            ENVEOF
+          cat > .env << 'ENVEOF'
+          SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION=86400000
+          ENVEOF
 
-            docker compose down
-            docker compose up -d --build
+                    docker compose down
+                    docker compose up -d --build
 
-            docker ps
+                    docker ps
           EOF
