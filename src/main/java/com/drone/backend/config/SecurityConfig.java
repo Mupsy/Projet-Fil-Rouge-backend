@@ -33,7 +33,9 @@ public class SecurityConfig {
                                 "/api/scores/leaderboard/**",
                                 "/unity",
                                 "/mobile",
-                                "/error"
+                                "/error",
+                                "/actuator/health",
+                                "/actuator/prometheus"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
