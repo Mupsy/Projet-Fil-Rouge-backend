@@ -26,31 +26,18 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        // ✅ Fix erreur 1009 : augmenter le buffer directement sur la session
-        log.info("SESSION CREATED");
+
 
         session.setBinaryMessageSizeLimit(MAX_BUFFER_SIZE);
         session.setTextMessageSizeLimit(MAX_BUFFER_SIZE);
 
         registry.registerUnity(session);
-        log.info("🎮 [UNITY] Connexion établie — sessionId={} remoteAddr={} bufferMax={}MB",
-                session.getId(),
-                session.getRemoteAddress(),
-                MAX_BUFFER_SIZE / 1024 / 1024);
         log.debug("[UNITY] Headers: {}", session.getHandshakeHeaders());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         registry.clearUnity();
-        log.info("🎮 [UNITY] Connexion fermée — sessionId={} code={} reason='{}' | Stats: reçues={} envoyées={} bytesReçus={} bytesEnvoyés={}",
-                session.getId(),
-                status.getCode(),
-                status.getReason(),
-                framesReceived.get(),
-                framesSent.get(),
-                bytesReceived.get(),
-                bytesSent.get());
     }
 
     @Override
@@ -63,7 +50,6 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
-        log.info("Frame reçue : {} octets", message.getPayloadLength());
         int frameSize = message.getPayload().remaining();
         framesReceived.incrementAndGet();
         bytesReceived.addAndGet(frameSize);
@@ -78,7 +64,6 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
         for (WebSocketSession mobile : registry.getMobileSessions()) {
             if (mobile.isOpen()) {
                 try {
-                    log.info("Envoi vers mobile : {} octets", frameSize);
                     mobile.sendMessage(new BinaryMessage(message.getPayload().duplicate()));
                     sent++;
                     framesSent.incrementAndGet();

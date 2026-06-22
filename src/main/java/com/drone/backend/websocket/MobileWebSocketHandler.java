@@ -34,24 +34,11 @@ public class MobileWebSocketHandler extends AbstractWebSocketHandler {
         session.setTextMessageSizeLimit(MAX_BUFFER_SIZE);
 
         registry.addMobile(session);
-        log.info("📱 [MOBILE] Connexion établie — sessionId={} remoteAddr={} totalConnectés={} bufferMax={}MB",
-                session.getId(),
-                session.getRemoteAddress(),
-                registry.getMobileCount(),
-                MAX_BUFFER_SIZE / 1024 / 1024);
-        log.info("📱 [MOBILE] Unity disponible: {}", registry.isUnityConnected());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         registry.removeMobile(session);
-        log.info("📱 [MOBILE] Connexion fermée — sessionId={} code={} reason='{}' totalRestants={} | Stats: reçus={} invalides={}",
-                session.getId(),
-                status.getCode(),
-                status.getReason(),
-                registry.getMobileCount(),
-                messagesReceived.get(),
-                messagesInvalid.get());
     }
 
     @Override
