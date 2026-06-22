@@ -14,6 +14,7 @@ public class WebSocketContainerConfig {
 
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
+        log.info("CONFIGURATION WEBSOCKET CHARGÉE");
         ServletServerContainerFactoryBean factory = new ServletServerContainerFactoryBean();
         factory.setMaxBinaryMessageBufferSize(MAX_SIZE);
         factory.setMaxTextMessageBufferSize(MAX_SIZE);
@@ -24,7 +25,6 @@ public class WebSocketContainerConfig {
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
         return factory -> factory.addContextCustomizers(context -> {
-            // Attributs JSR-356 lus par Tomcat avant d'ouvrir la session WS
             context.setAttribute(
                 "org.apache.tomcat.websocket.binaryBufferSize",
                 MAX_SIZE
