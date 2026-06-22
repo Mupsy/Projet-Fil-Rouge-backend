@@ -106,6 +106,8 @@ services:
     volumes:
       - drone_grafana_data:/var/lib/grafana
       - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./monitoring/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./monitoring/dashboards:/etc/grafana/dashboards:ro
     ports:
       - "3000:3000"
     depends_on:
