@@ -27,9 +27,9 @@ jobs:
           git pull origin main
 
           cat > .env << 'ENVEOF'
-          SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}
-          SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }}
-          SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
+          SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           GRAFANA_ADMIN_USER=${{ secrets.GRAFANA_ADMIN_USER}}
           GRAFANA_ADMIN_PASSWORD=${{ secrets.GRAFANA_ADMIN_PASSWORD }}
