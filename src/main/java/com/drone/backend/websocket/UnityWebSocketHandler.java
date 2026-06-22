@@ -1,4 +1,3 @@
-
 package com.drone.backend.websocket;
 
 import lombok.extern.slf4j.Slf4j;
@@ -6,16 +5,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Component
 public class UnityWebSocketHandler extends AbstractWebSocketHandler {
 
+    private static final int MAX_BUFFER_SIZE = 10 * 1024 * 1024; // 10 MB
+
     private final SessionRegistry registry;
 
-    // Compteurs pour stats dans les logs
     private final AtomicLong framesSent     = new AtomicLong(0);
     private final AtomicLong framesReceived = new AtomicLong(0);
     private final AtomicLong bytesSent      = new AtomicLong(0);
@@ -27,17 +26,22 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
+        // ✅ Fix erreur 1009 : augmenter le buffer directement sur la session
+        session.setBinaryMessageSizeLimit(MAX_BUFFER_SIZE);
+        session.setTextMessageSizeLimit(MAX_BUFFER_SIZE);
+
         registry.registerUnity(session);
-        log.info("🎮 [UNITY] Connexion établie — sessionId={} remoteAddr={}",
+        log.info("🎮 [UNITY] Connexion établie — sessionId={} remoteAddr={} bufferMax={}MB",
                 session.getId(),
-                session.getRemoteAddress());
+                session.getRemoteAddress(),
+                MAX_BUFFER_SIZE / 1024 / 1024);
         log.debug("[UNITY] Headers: {}", session.getHandshakeHeaders());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         registry.clearUnity();
-        log.info("🎮 [UNITY] Connexion fermée — sessionId={} code={} reason='{}' | Stats: framesReçues={} framesSent={} bytesReçus={} bytesSent={}",
+        log.info("🎮 [UNITY] Connexion fermée — sessionId={} code={} reason='{}' | Stats: reçues={} envoyées={} bytesReçus={} bytesEnvoyés={}",
                 session.getId(),
                 status.getCode(),
                 status.getReason(),
@@ -55,10 +59,6 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
                 exception);
     }
 
-    /**
-     * Reçoit une frame JPG binaire depuis Unity (Streamer.cs)
-     * et la relaie à tous les mobiles connectés.
-     */
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         int frameSize = message.getPayload().remaining();
@@ -82,8 +82,7 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
                 } catch (IOException e) {
                     errors++;
                     log.error("🎮 [UNITY] ❌ Erreur relay frame → mobile={} erreur='{}'",
-                            mobile.getId(),
-                            e.getMessage());
+                            mobile.getId(), e.getMessage());
                 }
             } else {
                 log.warn("🎮 [UNITY] ⚠️ Session mobile fermée ignorée — mobileId={}",
@@ -91,17 +90,12 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
             }
         }
 
-        if (errors > 0 || log.isDebugEnabled()) {
-            log.debug("🎮 [UNITY] Relay résultat — envoyés={} erreurs={}",
-                    sent, errors);
-        }
+        log.debug("🎮 [UNITY] Relay résultat — envoyés={} erreurs={}", sent, errors);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        log.debug("🎮 [UNITY] Message texte reçu — payload='{}'",
-                message.getPayload());
-        // Relay aux mobiles si nécessaire
+        log.debug("🎮 [UNITY] Message texte reçu — payload='{}'", message.getPayload());
         for (WebSocketSession mobile : registry.getMobileSessions()) {
             if (mobile.isOpen()) {
                 try {
@@ -114,30 +108,24 @@ public class UnityWebSocketHandler extends AbstractWebSocketHandler {
         }
     }
 
-    /**
-     * Envoie les inputs JSON du mobile vers Unity.
-     */
     public void forwardInputsToUnity(String inputsJson) {
         WebSocketSession unity = registry.getUnitySession();
 
         if (unity == null) {
-            log.warn("📱→🎮 [FORWARD] ⚠️ Unity non connecté — inputs ignorés: '{}'", inputsJson);
+            log.warn("📱→🎮 [FORWARD] ⚠️ Unity non connecté — inputs ignorés");
             return;
         }
-
         if (!unity.isOpen()) {
-            log.warn("📱→🎮 [FORWARD] ⚠️ Session Unity fermée — inputs ignorés: '{}'", inputsJson);
+            log.warn("📱→🎮 [FORWARD] ⚠️ Session Unity fermée — inputs ignorés");
             registry.clearUnity();
             return;
         }
 
         try {
             unity.sendMessage(new TextMessage(inputsJson));
-            log.debug("📱→🎮 [FORWARD] Inputs envoyés à Unity: '{}'", inputsJson);
+            log.debug("📱→🎮 [FORWARD] Inputs envoyés: '{}'", inputsJson);
         } catch (IOException e) {
-            log.error("📱→🎮 [FORWARD] ❌ Erreur envoi inputs → Unity — erreur='{}'",
-                    e.getMessage(), e);
+            log.error("📱→🎮 [FORWARD] ❌ Erreur envoi → Unity: '{}'", e.getMessage(), e);
         }
     }
 }
-
