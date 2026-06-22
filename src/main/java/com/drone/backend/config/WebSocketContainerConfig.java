@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
+@Slf4j
 @Configuration
 public class WebSocketContainerConfig {
 
@@ -14,25 +15,12 @@ public class WebSocketContainerConfig {
 
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
-        log.info("CONFIGURATION WEBSOCKET CHARGÉE");
-        ServletServerContainerFactoryBean factory = new ServletServerContainerFactoryBean();
-        factory.setMaxBinaryMessageBufferSize(MAX_SIZE);
-        factory.setMaxTextMessageBufferSize(MAX_SIZE);
-        factory.setMaxSessionIdleTimeout(3600000L);
-        return factory;
-    }
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
 
-    @Bean
-    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
-        return factory -> factory.addContextCustomizers(context -> {
-            context.setAttribute(
-                "org.apache.tomcat.websocket.binaryBufferSize",
-                MAX_SIZE
-            );
-            context.setAttribute(
-                "org.apache.tomcat.websocket.textBufferSize",
-                MAX_SIZE
-            );
-        });
+        container.setMaxBinaryMessageBufferSize(MAX_SIZE);
+        container.setMaxTextMessageBufferSize(MAX_SIZE);
+        container.setMaxSessionIdleTimeout(0L);
+
+        return container;
     }
 }
