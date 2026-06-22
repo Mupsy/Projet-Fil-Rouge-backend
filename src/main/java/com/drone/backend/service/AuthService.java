@@ -4,6 +4,8 @@ package com.drone.backend.service;
 import com.drone.backend.dto.request.*;
 import com.drone.backend.dto.response.*;
 import com.drone.backend.entity.User;
+import com.drone.backend.exception.InvalidCredentialsException;
+import com.drone.backend.exception.UserAlreadyExistsException;
 import com.drone.backend.repository.UserRepository;
 import com.drone.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest req) {
         if (userRepository.existsByUsername(req.getUsername()))
-            throw new RuntimeException("Username déjà pris");
+            throw new UserAlreadyExistsException("Username déjà pris");
         if (userRepository.existsByEmail(req.getEmail()))
-            throw new RuntimeException("Email déjà utilisé");
+            throw new UserAlreadyExistsException("Email déjà utilisé");
 
         User user = User.builder()
                 .username(req.getUsername())
@@ -38,10 +40,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new InvalidCredentialsException("Email ou mot de passe incorrect"));
 
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword()))
-            throw new RuntimeException("Mot de passe incorrect");
+            throw new InvalidCredentialsException("Email ou mot de passe incorrect");
 
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);

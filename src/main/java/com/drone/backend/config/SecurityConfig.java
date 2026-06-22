@@ -32,7 +32,8 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/scores/leaderboard/**",
                                 "/unity",
-                                "/mobile"
+                                "/mobile",
+                                "/error"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
