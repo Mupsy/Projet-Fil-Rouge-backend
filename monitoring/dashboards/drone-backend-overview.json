@@ -13,9 +13,9 @@
       "title": "Backend",
       "type": "stat",
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "up{job=\"spring-backend\"}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "up{job=\"spring-backend\"}", "datasource": "Prometheus" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -32,9 +32,9 @@
       "title": "Requêtes / s",
       "type": "stat",
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "sum(rate(http_server_requests_seconds_count{job=\"spring-backend\"}[1m]))", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "sum(rate(http_server_requests_seconds_count{job=\"spring-backend\"}[1m]))", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "reqps", "decimals": 2 } },
       "options": { "graphMode": "area", "colorMode": "value" }
@@ -44,9 +44,9 @@
       "title": "Latence HTTP p95",
       "type": "stat",
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "s", "decimals": 3 } },
       "options": { "graphMode": "area", "colorMode": "value" }
@@ -56,9 +56,9 @@
       "title": "PostgreSQL",
       "type": "stat",
       "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "pg_up", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "pg_up", "datasource": "Prometheus" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -76,10 +76,10 @@
       "title": "JVM Heap utilisée",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "jvm_memory_used_bytes{job=\"spring-backend\", area=\"heap\"}", "legendFormat": "{{id}}", "datasource": { "type": "prometheus", "uid": "prometheus" } },
-        { "refId": "B", "expr": "jvm_memory_max_bytes{job=\"spring-backend\", area=\"heap\"}", "legendFormat": "max {{id}}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "jvm_memory_used_bytes{job=\"spring-backend\", area=\"heap\"}", "legendFormat": "{{id}}", "datasource": "Prometheus" },
+        { "refId": "B", "expr": "jvm_memory_max_bytes{job=\"spring-backend\", area=\"heap\"}", "legendFormat": "max {{id}}", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }
     },
@@ -88,9 +88,9 @@
       "title": "CPU process (backend)",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 8, "x": 8, "y": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "process_cpu_usage{job=\"spring-backend\"} * 100", "legendFormat": "CPU %", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "process_cpu_usage{job=\"spring-backend\"} * 100", "legendFormat": "CPU %", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "percent", "max": 100, "min": 0 } }
     },
@@ -99,9 +99,9 @@
       "title": "Threads JVM actifs",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "jvm_threads_live_threads{job=\"spring-backend\"}", "legendFormat": "threads vivants", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "jvm_threads_live_threads{job=\"spring-backend\"}", "legendFormat": "threads vivants", "datasource": "Prometheus" }
       ]
     },
 
@@ -110,9 +110,9 @@
       "title": "Requêtes HTTP par statut",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "sum by (status) (rate(http_server_requests_seconds_count{job=\"spring-backend\"}[1m]))", "legendFormat": "{{status}}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "sum by (status) (rate(http_server_requests_seconds_count{job=\"spring-backend\"}[1m]))", "legendFormat": "{{status}}", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "reqps" } }
     },
@@ -121,11 +121,11 @@
       "title": "Latence HTTP (p50 / p95 / p99)",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p50", "datasource": { "type": "prometheus", "uid": "prometheus" } },
-        { "refId": "B", "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p95", "datasource": { "type": "prometheus", "uid": "prometheus" } },
-        { "refId": "C", "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p99", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p50", "datasource": "Prometheus" },
+        { "refId": "B", "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p95", "datasource": "Prometheus" },
+        { "refId": "C", "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{job=\"spring-backend\"}[5m])) by (le))", "legendFormat": "p99", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "s" } }
     },
@@ -135,9 +135,9 @@
       "title": "Connexions PostgreSQL actives",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "pg_stat_database_numbackends{datname=\"dronedb\"}", "legendFormat": "connexions actives", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "pg_stat_database_numbackends{datname=\"dronedb\"}", "legendFormat": "connexions actives", "datasource": "Prometheus" }
       ]
     },
     {
@@ -145,9 +145,9 @@
       "title": "Taille de la base de données",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "pg_database_size_bytes{datname=\"dronedb\"}", "legendFormat": "taille DB", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "pg_database_size_bytes{datname=\"dronedb\"}", "legendFormat": "taille DB", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }
     },
@@ -157,9 +157,9 @@
       "title": "CPU par conteneur",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"drone-.*\"}[1m])) * 100", "legendFormat": "{{name}}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"drone-.*\"}[1m])) * 100", "legendFormat": "{{name}}", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "percent" } }
     },
@@ -168,9 +168,9 @@
       "title": "Mémoire par conteneur",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "container_memory_usage_bytes{name=~\"drone-.*\"}", "legendFormat": "{{name}}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "container_memory_usage_bytes{name=~\"drone-.*\"}", "legendFormat": "{{name}}", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }
     },
@@ -180,9 +180,9 @@
       "title": "État des cibles Prometheus",
       "type": "timeseries",
       "gridPos": { "h": 6, "w": 24, "x": 0, "y": 36 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": "Prometheus",
       "targets": [
-        { "refId": "A", "expr": "up", "legendFormat": "{{job}}", "datasource": { "type": "prometheus", "uid": "prometheus" } }
+        { "refId": "A", "expr": "up", "legendFormat": "{{job}}", "datasource": "Prometheus" }
       ],
       "fieldConfig": { "defaults": { "min": 0, "max": 1 } }
     }
